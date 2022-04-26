@@ -25,10 +25,7 @@ planets = [
 bp = Blueprint("planets", __name__, url_prefix="/planets")
 
 @bp.route("", methods=["GET"])
-							# ^ this , makes it a tuple! 
-		#  ^ can leave blank cuz we already filled the method
 def index_planets(): 
-# we have our list of cat instances, but not a dictionary of their info! need to make a dictionary of cats 
 	result_list = [planet.to_dict() for planet in planets]
 
 	return jsonify(result_list) 
