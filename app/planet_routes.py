@@ -1,25 +1,27 @@
 from flask import Blueprint, jsonify, abort, make_response
 
 class Planet:
-	def __init__(self, id, name, description, no_life=True):
+	def __init__(self, id, name, description, moons=None, life=True):
 		self.id = id
 		self.name = name
 		self.description = description
-		self.no_life = no_life 
+		self.life = life 
+		self.moons = moons if moons is not None else []
 
 	def to_dict(self):
 		return dict(
 			id=self.id,
 			name=self.name,
 			description=self.description,
-			no_life=self.no_life)
+			life=self.life,
+			moons = self.moons)
 
 
 planets = [
-    Planet(1, "Methuselah", "oldest exoplanet"),
-    Planet(2, "Epsilon Eridani b", "closest exoplanet, has 2 astroid belts!!"),
-    Planet(3, "Aquarii A", "the most suns!"),
-    Planet(4, "Gliese 876 b", "gas giant, big, icy moons, water might be found", False)
+    Planet(1, "Epsilon Eridani I ", "closest planet to the star", life=False),
+    Planet(2, "Epsilon Eridani II", "2 astroid belts, most developed human colony", ["Turul", "Csodaszarvas"]),
+    Planet(3, "Epsilon Eridani III", "aka Tribute", ["Emese"]),
+    Planet(4, "Circumstance", "world-famous")
 ]
 
 bp = Blueprint("planets", __name__, url_prefix="/planets")
