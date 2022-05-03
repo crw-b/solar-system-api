@@ -53,7 +53,6 @@ def get_planet(id):
 	return jsonify(planet.to_dict())
 
 
-
 def validate_planet(id):
 	try:
 		id = int(id)
@@ -66,6 +65,29 @@ def validate_planet(id):
 	if not planet:
 		abort(make_response(jsonify(dict(details=f"planet id {id} not found")), 404))
 	return planet
+
+@planets_bp.route("/<id>", methods=["PUT"])
+def update_planet(id): 
+	planet = validate_planet(id)
+	request_body = request.get_json()
+	planet.name = request_body['name']
+	planet.description = request_body['description']
+	planet.life = request_body['life']
+	planet.moons = request_body['moons']
+	db.session.commit()
+	return jsonify(planet.to_dict())
+
+@planets_bp.route("/<id>", methods=["DELETE"])
+def delete_planet(id): 
+	planet = validate_planet(id)
+	db.session.delete(planet)
+	db.session.commit()
+	return make_response(f'*** You have successfully destroyed {planet.name} ! *** ')
+
+
+
+
+
 
 
 # @bp.route("/<id>", methods=["GET"])
