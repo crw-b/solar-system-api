@@ -1,6 +1,7 @@
+from xml.dom.minidom import Identified
 from app import db
 from app.models.planet import Planet
-from flask import Blueprint, jsonify, make_response, request
+from flask import Blueprint, jsonify, make_response, request, abort 
 
 # class Planet:
 # 	def __init__(self, id, name, description, no_life=True):
@@ -46,17 +47,25 @@ def index_planets():
 	result_list = [planet.to_dict() for planet in planets]
 	return jsonify(result_list) 
 
-# def validate_planet(id):
-# 	try:
-# 		id = int(id)
-# 	except ValueError:
-# 		abort(make_response(jsonify(dict(details=f"invalid id: {id}")), 400))
+@planets_bp.route("/<id>", methods=["GET"])
+def get_planet(id):
+	planet = validate_planet(id) 
+	return jsonify(planet.to_dict())
+
+
+
+def validate_planet(id):
+	try:
+		id = int(id)
+	except ValueError:
+		abort(make_response(jsonify(dict(details=f"invalid id: {id}")), 400))
 	
-# 	for planet in planets:
-# 		if planet.id == id:
-# 			return planet
-	
-# 	abort(make_response(jsonify(dict(details=f"planet id {id} not found")), 404))
+
+	planet = Planet.query.get(id)
+		
+	if not planet:
+		abort(make_response(jsonify(dict(details=f"planet id {id} not found")), 404))
+	return planet
 
 
 # @bp.route("/<id>", methods=["GET"])
