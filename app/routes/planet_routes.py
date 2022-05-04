@@ -2,6 +2,7 @@ from xml.dom.minidom import Identified
 from app import db
 from app.models.planet import Planet
 from flask import Blueprint, jsonify, make_response, request, abort 
+from app.routes.routes_helper import error_message
 
 # class Planet:
 # 	def __init__(self, id, name, description, no_life=True):
@@ -27,14 +28,27 @@ from flask import Blueprint, jsonify, make_response, request, abort
 
 planets_bp = Blueprint("planets", __name__, url_prefix="/planets")
 
+def make_planet_safely(data_dict):
+	try:
+		return Planet.from_dict(data_dict)
+	except KeyError as err:
+		error_message(f"Missing key: {err}", 400)
+
+def replace_planet_safely(planet, data_dict):
+	try:
+		planet.replace_details(data_dict)
+	except KeyError as err:
+		error_message(f"Missing key: {err}", 400)
+
 @planets_bp.route("", methods=["POST"])
 def handle_planets():
 	request_body = request.get_json()
-	new_planet = Planet(
-		name=request_body["name"],
-		description=request_body["description"],
-		life = request_body["life"],
-		moons = request_body["moons"])
+	# new_planet = Planet(
+	# 	name=request_body["name"],
+	# 	description=request_body["description"],
+	# 	life = request_body["life"],
+	# 	moons = request_body["moons"])
+	new_planet = make_planet_safely(request_body)
 
 	db.session.add(new_planet)
 	db.session.commit()
@@ -43,7 +57,14 @@ def handle_planets():
 
 @planets_bp.route("", methods=["GET"])
 def index_planets(): 
-	planets = Planet.query.all()
+	# planets = Planet.query.all()
+	name_param = request.args.get("name")
+
+	if name_param:
+		planets = Planet.query.filter_by(name=name_param)
+	else:
+		planets = Planet.query.all()
+
 	result_list = [planet.to_dict() for planet in planets]
 	return jsonify(result_list) 
 
@@ -57,14 +78,15 @@ def validate_planet(id):
 	try:
 		id = int(id)
 	except ValueError:
-		abort(make_response(jsonify(dict(details=f"invalid id: {id}")), 400))
-	
+		# abort(make_response(jsonify(dict(details=f"invalid id: {id}")), 400))
+		error_message(f"Invalid id {id}", 400)
 
 	planet = Planet.query.get(id)
 		
-	if not planet:
-		abort(make_response(jsonify(dict(details=f"planet id {id} not found")), 404))
-	return planet
+	if planet:
+		# abort(make_response(jsonify(dict(details=f"planet id {id} not found")), 404))
+		return planet
+	error_message(f"No planet with id {id} found", 404)
 
 @planets_bp.route("/<id>", methods=["PUT"])
 def update_planet(id): 
