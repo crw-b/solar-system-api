@@ -63,3 +63,14 @@ def test_delete_planet(client, two_planets):
 
     assert response.status_code == 200
     assert response_body == '*** You have successfully destroyed Earth ! ***'
+
+
+def test_get_planet_id_not_found(client):
+
+    response = client.delete("/planets/1")
+    response_body = response.get_json()
+
+    assert response.status_code == 404
+    assert response_body == {'details': 'No planet with id 1 found'}
+        
+      

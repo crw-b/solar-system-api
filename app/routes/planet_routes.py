@@ -54,7 +54,7 @@ def validate_planet(id):
 		
 	if planet:
 		return planet
-	error_message(f"No planet with id {id} found", 404)
+	error_message(f'No planet with id {id} found', 404)
 
 @planets_bp.route("/<id>", methods=["PUT"])
 def update_planet(id): 
@@ -66,6 +66,27 @@ def update_planet(id):
 	planet.moons = request_body['moons']
 	db.session.commit()
 	return jsonify(planet.to_dict())
+
+@planets_bp.route("/<id>", methods=["PATCH"])
+def upgrade_planet_with_id(id):
+    planet = validate_planet(id)
+    request_body = request.get_json()
+    planet_keys = request_body.keys()
+
+    if "name" in planet_keys:
+        planet.name = request_body["name"]
+    if "description" in planet_keys:
+        planet.description = request_body["description"]
+    if "life" in planet_keys:
+        planet.life = request_body["life"]
+
+
+
+    db.session.commit()
+    return jsonify(planet.to_dict())
+
+
+
 
 @planets_bp.route("/<id>", methods=["DELETE"])
 def delete_planet(id): 
