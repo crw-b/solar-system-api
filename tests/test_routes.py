@@ -19,11 +19,11 @@ def test_get_planet_by_id(client, two_planets):
     response = client.get("planets/1")
     response_body = response.get_json()
 
-#     assert response.status_code == 200
-#     assert response_body == {
-#         "id":1,
-#         "name": "Earth",
-#         "description": "home",
-#         "moons": "Luna",
-#         "life":True
-#     }
+    assert response.status_code == 200
+    assert response_body == {
+        "id":1,
+        "name": "Earth",
+        "description": "home",
+        "moons": "Luna",
+        "life":True
+    }
