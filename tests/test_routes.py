@@ -55,3 +55,11 @@ def test_create_one_planet(client):
         "moons": "None",
         "life":"False"
     }
+
+def test_delete_planet(client, two_planets):
+
+    response = client.delete("/planets/1")
+    response_body = response.get_data(as_text=True)
+
+    assert response.status_code == 200
+    assert response_body == '*** You have successfully destroyed Earth ! ***'
