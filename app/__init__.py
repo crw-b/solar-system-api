@@ -7,7 +7,7 @@ import os
 db = SQLAlchemy()
 migrate = Migrate()
 load_dotenv()
-# connection_string = 'postgresql+psycopg2://postgres:postgres@localhost:5432/planets_development'
+
 
 def create_app(test_config=None):
     app = Flask(__name__)
