@@ -67,10 +67,31 @@ def test_delete_planet(client, two_planets):
 
 def test_get_planet_id_not_found(client):
 
-    response = client.delete("/planets/1")
+    response = client.get("/planets/1")
     response_body = response.get_json()
 
     assert response.status_code == 404
     assert response_body == {'details': 'No planet with id 1 found'}
-        
+
+
+
+def test_update_planet_info(client, two_planets):
+
+    response = client.patch("/planets/1", json={
+       
+        "description": "A big blue planet!",
+       
+    })
+
+    response_body = response.get_json()
+
+    assert response.status_code == 200
+    assert response_body == {
+        "id" : 1,
+        "name": "Earth",
+        "description": "A big blue planet!",
+        "moons": "Luna",
+        "life":"True"
+    }
+
       
