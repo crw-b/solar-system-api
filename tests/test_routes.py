@@ -96,7 +96,7 @@ def test_get_planet_id_not_found(client):
 
 
 
-def test_update_planet_info(client, two_planets):
+def test_update_planet_description(client, two_planets):
 
     response = client.patch("/planets/1", json={
         "description": "A big blue planet!",
@@ -110,6 +110,57 @@ def test_update_planet_info(client, two_planets):
         "name": "Earth",
         "description": "A big blue planet!",
         "moons": "Luna",
+        "life":"True"
+    }
+
+def test_update_planet_name(client, two_planets):
+
+    response = client.patch("/planets/1", json={
+        "name": "Earth 2.0",
+    })
+
+    response_body = response.get_json()
+
+    assert response.status_code == 200
+    assert response_body == {
+        "id" : 1,
+        "name": "Earth 2.0",
+        "description": "home",
+        "moons": "Luna",
+        "life":"True"
+    }
+
+def test_update_planet_life(client, two_planets):
+
+    response = client.patch("/planets/1", json={
+        "life":"Not anymore",
+    })
+
+    response_body = response.get_json()
+
+    assert response.status_code == 200
+    assert response_body == {
+        "id" : 1,
+        "name": "Earth",
+        "description": "home",
+        "moons":"Luna",
+        "life":"Not anymore"
+    }
+
+def test_update_planet_moons(client, two_planets):
+
+    response = client.patch("/planets/1", json={
+        "moons":"Not anymore",
+    })
+
+    response_body = response.get_json()
+
+    assert response.status_code == 200
+    assert response_body == {
+        "id" : 1,
+        "name": "Earth",
+        "description": "home",
+        "moons":"Not anymore",
         "life":"True"
     }
 

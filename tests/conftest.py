@@ -4,6 +4,7 @@ from app import db
 from app import create_app
 from app.models.planet import Planet
 
+
 @pytest.fixture
 def app():
     app = create_app({"TESTING": True})

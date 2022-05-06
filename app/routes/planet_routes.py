@@ -76,8 +76,8 @@ def upgrade_planet_with_id(id):
 		planet.description = request_body["description"]
 	if "life" in planet_keys:
 		planet.life = request_body["life"]
-	if "moon" in planet_keys:
-		planet.life = request_body["moon"]
+	if "moons" in planet_keys:
+		planet.moons = request_body["moons"]
 		
 	db.session.commit()
 	return jsonify(planet.to_dict())
