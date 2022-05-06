@@ -26,8 +26,8 @@ def client(app):
 
 @pytest.fixture
 def two_planets(app):
-    Earth = Planet(id=1, name="Earth", description="home", life="True", moons="Luna")
-    Mars = Planet(id=2, name="Mars", description="1st Colony", life="True", moons="None")
+    Earth = Planet(id=1, name="Earth", description="home", life=True, moons=1)
+    Mars = Planet(id=2, name="Mars", description="1st Colony", life=True, moons=0)
 
     db.session.add(Earth)
     db.session.add(Mars)

@@ -16,13 +16,13 @@ def test_get_all_planets(client, two_planets):
     assert response_body == [{"id":1,
         "name": "Earth",
         "description": "home",
-        "moons": "Luna",
-        "life":"True"},
+        "moons": 1,
+        "life": True},
         {"id":2,
         "name": "Mars",
         "description": "1st Colony",
-        "moons": "None",
-        "life":"True"}]
+        "moons": 0,
+        "life": True}]
 
 def test_get_planet_by_id(client, two_planets):
     response = client.get("planets/1")
@@ -33,9 +33,22 @@ def test_get_planet_by_id(client, two_planets):
         "id":1,
         "name": "Earth",
         "description": "home",
-        "moons": "Luna",
-        "life":"True"
+        "moons": 1,
+        "life": True
     }
+
+def test_get_planet_by_name(client, two_planets):
+    response = client.get("planets?name=Earth")
+    response_body = response.get_json()
+
+    assert response.status_code == 200
+    assert response_body == [{
+        "id":1,
+        "name": "Earth",
+        "description": "home",
+        "moons": 1,
+        "life": True
+    }]
 
 def test_get_planet_by_invalid_id(client):
     response = client.get("planets/a")
@@ -49,8 +62,8 @@ def test_create_one_planet(client):
     response = client.post("/planets", json={
         "name": "Pluto",
         "description": "A real planet!",
-        "moons": "None",
-        "life":"False"
+        "moons": 0,
+        "life": False 
     })
     response_body = response.get_json()
 
@@ -59,16 +72,16 @@ def test_create_one_planet(client):
         "id":1,
         "name": "Pluto",
         "description": "A real planet!",
-        "moons": "None",
-        "life":"False"
+        "moons": 0,
+        "life": False 
     }
 
 def test_create_planet_with_a_missing_key(client):
 
     response = client.post("/planets", json={
         "description": "A big blue planet!",
-        "moons": "Luna",
-        "life":"True"
+        "moons": 1,
+        "life": True 
     })
 
     response_body = response.get_json()
@@ -109,8 +122,8 @@ def test_update_planet_description(client, two_planets):
         "id" : 1,
         "name": "Earth",
         "description": "A big blue planet!",
-        "moons": "Luna",
-        "life":"True"
+        "moons": 1,
+        "life": True 
     }
 
 def test_update_planet_name(client, two_planets):
@@ -126,14 +139,14 @@ def test_update_planet_name(client, two_planets):
         "id" : 1,
         "name": "Earth 2.0",
         "description": "home",
-        "moons": "Luna",
-        "life":"True"
+        "moons": 1,
+        "life": True 
     }
 
 def test_update_planet_life(client, two_planets):
 
     response = client.patch("/planets/1", json={
-        "life":"Not anymore",
+        "life": False,
     })
 
     response_body = response.get_json()
@@ -143,14 +156,14 @@ def test_update_planet_life(client, two_planets):
         "id" : 1,
         "name": "Earth",
         "description": "home",
-        "moons":"Luna",
-        "life":"Not anymore"
+        "moons": 1,
+        "life": False
     }
 
 def test_update_planet_moons(client, two_planets):
 
     response = client.patch("/planets/1", json={
-        "moons":"Not anymore",
+        "moons":0,
     })
 
     response_body = response.get_json()
@@ -160,8 +173,8 @@ def test_update_planet_moons(client, two_planets):
         "id" : 1,
         "name": "Earth",
         "description": "home",
-        "moons":"Not anymore",
-        "life":"True"
+        "moons":0,
+        "life": True 
     }
 
 def test_update_planet_with_a_put(client, two_planets):
@@ -169,8 +182,8 @@ def test_update_planet_with_a_put(client, two_planets):
     response = client.put("/planets/1", json={
         "name": "Earth",
         "description": "A big blue planet!",
-        "moons": "Luna",
-        "life":"True"
+        "moons": 1,
+        "life": True 
     })
 
     response_body = response.get_json()
@@ -180,16 +193,16 @@ def test_update_planet_with_a_put(client, two_planets):
         "id" : 1,
         "name": "Earth",
         "description": "A big blue planet!",
-        "moons": "Luna",
-        "life":"True"
+        "moons": 1,
+        "life": True 
     }
 
 def test_update_planet_with_a_put_missing_key(client, two_planets):
 
     response = client.put("/planets/1", json={
         "description": "A big blue planet!",
-        "moons": "Luna",
-        "life":"True"
+        "moons": 1,
+        "life": True 
     })
 
     response_body = response.get_json()
