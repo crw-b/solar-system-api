@@ -69,21 +69,21 @@ def update_planet(id):
 
 @planets_bp.route("/<id>", methods=["PATCH"])
 def upgrade_planet_with_id(id):
-    planet = validate_planet(id)
-    request_body = request.get_json()
-    planet_keys = request_body.keys()
-
-    if "name" in planet_keys:
-        planet.name = request_body["name"]
-    if "description" in planet_keys:
-        planet.description = request_body["description"]
-    if "life" in planet_keys:
-        planet.life = request_body["life"]
-
-
-
-    db.session.commit()
-    return jsonify(planet.to_dict())
+	planet = validate_planet(id)
+	request_body = request.get_json()
+	planet_keys = request_body.keys()
+	
+	if "name" in planet_keys:
+		planet.name = request_body["name"]
+	if "description" in planet_keys:
+		planet.description = request_body["description"]
+	if "life" in planet_keys:
+		planet.life = request_body["life"]
+	if "moon" in planet_keys:
+		planet.life = request_body["moon"]
+		
+	db.session.commit()
+	return jsonify(planet.to_dict())
 
 
 
