@@ -13,7 +13,7 @@ def make_planet_safely(data_dict):
 
 def replace_planet_safely(planet, data_dict):
 	try:
-		planet.replace_details(data_dict)
+		return planet.replace_details(data_dict)
 	except KeyError as err:
 		error_message(f"Missing key: {err}", 400)
 
@@ -60,12 +60,9 @@ def validate_planet(id):
 def update_planet(id): 
 	planet = validate_planet(id)
 	request_body = request.get_json()
-	planet.name = request_body['name']
-	planet.description = request_body['description']
-	planet.life = request_body['life']
-	planet.moons = request_body['moons']
+	result = replace_planet_safely(planet, request_body)
 	db.session.commit()
-	return jsonify(planet.to_dict())
+	return jsonify(result)
 
 @planets_bp.route("/<id>", methods=["PATCH"])
 def upgrade_planet_with_id(id):

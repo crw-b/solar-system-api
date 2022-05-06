@@ -30,4 +30,4 @@ class Planet(db.Model):
         self.description=data_dict["description"]
         self.life=data_dict["life"]
         self.moons=data_dict["moons"]
-    
+        return self.to_dict()
